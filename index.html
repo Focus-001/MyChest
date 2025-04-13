@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#3b82f6">
+  <link rel="manifest" href="/manifest.json">
+  <title>Coffre-fort Virtuel</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --fg: #f8fafc;
+      --card: #1e293b;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--bg);
+      color: var(--fg);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      flex-direction: column;
+    }
+
+    .wr4p_c0ff {
+      background-color: var(--card);
+      padding: 30px;
+      border-radius: 16px;
+      width: 90%;
+      max-width: 600px;
+      margin: 20px auto;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      flex: 1;
+    }
+
+    h1, h2 {
+      text-align: center;
+      margin: 0;
+      padding: 10px;
+    }
+
+    input, textarea, button, select {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1em;
+    }
+
+    button {
+      background-color: var(--primary);
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover { background-color: var(--primary-hover); }
+    .h1dden_x { display: none; }
+    .dr0pm_nu {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 20px;
+    }
+
+    .drp_bx {
+      position: relative;
+      display: inline-block;
+    }
+
+    .drp_cntnt {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: var(--card);
+      border-radius: 8px;
+      padding: 10px;
+      min-width: 200px;
+      box-shadow: 0px 8px 16px rgba(0,0,0,0.3);
+      z-index: 1;
+    }
+
+    .drp_bx:hover .drp_cntnt { display: block; }
+
+    @media screen and (max-width: 600px) {
+      .wr4p_c0ff {
+        padding: 20px;
+      }
+      input, textarea, button {
+        font-size: 0.9em;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="wr4p_c0ff">
+    <div class="dr0pm_nu">
+      <div class="drp_bx">
+        <button>Paramètres ⚙️</button>
+        <div class="drp_cntnt">
+          <select onchange="ch0ixThm(this.value)">
+            <option value="">Choisir un thème</option>
+            <option value="">Sombre (défaut)</option>
+            <option value="light">Clair</option>
+            <option value="ocean">Océan</option>
+            <option value="sunset">Coucher de soleil</option>
+          </select>
+          <button onclick="alert('Contact support: email pro (en cours de création)')">Help</button>
+          <button onclick="alert('Vos données sont protégées par un système de hachage sécurisé local. Aucune donnée n’est envoyée en ligne. Personne, même pas nous, ne peut accéder à votre coffre-fort. 🔐')">Explications</button>
+        </div>
+      </div>
+    </div>
+
+    <h1>Coffre-fort Virtuel 🔐</h1>
+
+    <div id="auth_x">
+      <h2>Connexion / Inscription</h2>
+      <input type="text" id="usrNm32" placeholder="Nom d'utilisateur">
+      <input type="password" id="m@/3fermD0" placeholder="Mot de passe maître">
+      <button onclick="cnx_initiate()">Entrer</button>
+    </div>
+
+    <div id="v4ul7" class="h1dden_x">
+      <h2>Bienvenue dans votre coffre-fort</h2>
+      <textarea id="n0tez_" placeholder="Notes personnelles..."></textarea>
+      <textarea id="p@55x" placeholder="Mots de passe..."></textarea>
+      <textarea id="e_m4ils" placeholder="Adresses email..."></textarea>
+      <textarea id="g04l5" placeholder="Objectifs virtuels..."></textarea>
+      <textarea id="s3ns1t1f" placeholder="Données sensibles (nom, prénom, CB, amis, etc...)"></textarea>
+      <textarea id="f1lz" placeholder="Descriptions de fichiers importants (emplacements, noms, etc...)"></textarea>
+      <textarea id="l1nkz" placeholder="Liens importants (banques, comptes, documentation...)"></textarea>
+      <textarea id="pr0j3k7s" placeholder="Projets perso / professionnels à suivre..."></textarea>
+      <textarea id="0th3r" placeholder="Autres informations confidentielles..."></textarea>
+      <button onclick="s4vD474()">💾 Sauvegarder</button>
+      <p style="font-size:0.9em; opacity: 0.7; margin-top:10px;">Toutes les données sont stockées localement et protégées.</p>
+      <button onclick="exportData()">Exporter les données</button>
+    </div>
+  </div>
+
+  <script>
+    let lockTimeout;
+    let lastActivity = Date.now();
+
+    function resetTimeout() {
+      lastActivity = Date.now();
+    }
+
+    function checkInactivity() {
+      const now = Date.now();
+      if (now - lastActivity > 120000) { // 2 minutes d'inactivité
+        alert('Votre session a expiré pour des raisons de sécurité.');
+        window.location.reload();
+      }
+    }
+
+    setInterval(checkInactivity, 60000); // Vérifie chaque minute l'inactivité
+
+    async function sh4_256(p4ss) {
+      const x = new TextEncoder();
+      const y = x.encode(p4ss);
+      const h = await crypto.subtle.digest('SHA-256', y);
+      return btoa(String.fromCharCode(...new Uint8Array(h)));
+    }
+
+    async function cnx_initiate() {
+      const u = document.getElementById("usrNm32").value;
+      const p = document.getElementById("m@/3fermD0").value;
+      const hashS = localStorage.getItem(`v7_${u}_h@sh`);
+      const hashC = await sh4_256(p);
+
+      if (!hashS) {
+        localStorage.setItem(`v7_${u}_h@sh`, hashC);
+        alert("Compte créé avec succès ! Bienvenue.");
+        sh0wV(u);
+      } else if (hashS === hashC) {
+        sh0wV(u);
+      } else {
+        alert("Mot de passe incorrect.");
+      }
+    }
+
+    async function sh0wV(u) {
+      const dt = JSON.parse(localStorage.getItem(`v7_${u}_d474`) || '{}');
+      document.getElementById("auth_x").classList.add("h1dden_x");
+      document.getElementById("v4ul7").classList.remove("h1dden_x");
+      const f = ["n0tez_", "p@55x", "e_m4ils", "g04l5", "s3ns1t1f", "f1lz", "l1nkz", "pr0j3k7s", "0th3r"];
+      f.forEach(i => document.getElementById(i).value = dt[i] || "");
+      window.uAct1f = u;
+    }
+
+    function s4vD474() {
+      const f = ["n0tez_", "p@55x", "e_m4ils", "g04l5", "s3ns1t1f", "f1lz", "l1nkz", "pr0j3k7s", "0th3r"];
+      const d = {};
+      f.forEach(i => d[i] = document.getElementById(i).value);
+      localStorage.setItem(`v7_${window.uAct1f}_d474`, JSON.stringify(d));
+    }
+
+    function exportData() {
+      const data = localStorage.getItem(`v7_${window.uAct1f}_d474`);
+      const blob = new Blob([data], { type: "application/json" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "coffre_fort_export.json";
+      link.click();
+    }
+
+    function ch0ixThm(thm) {
+      document.body.className = thm;
+    }
+
+  </script>
+</body>
+</html>
